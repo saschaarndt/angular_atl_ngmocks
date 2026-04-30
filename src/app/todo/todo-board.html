@@ -1,5 +1,4 @@
 <div class="board">
-  <!-- Seitenweiter Header -->
   <header class="board__header" role="banner">
     <span class="board__brand" aria-label="Meine Aufgaben">
       <span class="board__logo-tile" aria-hidden="true">
@@ -10,12 +9,9 @@
     <span class="board__claim">Weil du vergesslich bist.</span>
   </header>
 
-  <!-- Hauptfläche -->
   <main class="board__main">
-    <!-- Linke Seite: Listenverwaltung -->
     <aside class="board__sidebar" aria-label="Listen">
       <section class="board__sidebar-card" aria-label="Listenwahl">
-        <!-- Tabs -->
         <nav class="board__tabs" role="tablist" aria-label="Meine Listen">
           @for (list of lists(); track list.id) {
             <button
@@ -46,7 +42,6 @@
         </nav>
       </section>
 
-      <!-- Neue Liste -->
       <form class="board__add-form" [formGroup]="form" (ngSubmit)="addList()">
         <app-todo-text-input
           class="board__list-input"
@@ -61,7 +56,6 @@
       </form>
     </aside>
 
-    <!-- Rechte Seite: Aktive Liste -->
     @if (activeList()) {
       <app-todo-card [listId]="activeListId()" [listName]="activeList()?.name" />
     }

@@ -10,51 +10,16 @@
   </header>
 
   <main class="board__main">
-    <aside class="board__sidebar" aria-label="Listen">
-      <section class="board__sidebar-card" aria-label="Listenwahl">
-        <nav class="board__tabs" role="tablist" aria-label="Meine Listen">
-          @for (list of lists(); track list.id) {
-            <button
-              type="button"
-              role="tab"
-              class="board__tab"
-              [class.board__tab--active]="activeListId() === list.id"
-              [attr.aria-selected]="activeListId() === list.id"
-              (click)="switchList(list.id)"
-            >
-              <span class="board__tab-name">{{ list.name }}</span>
-              @if (lists().length > 1) {
-                <span
-                  class="board__tab-close"
-                  [class.board__tab-close--active]="activeListId() === list.id"
-                  role="button"
-                  tabindex="0"
-                  [attr.aria-label]="'Liste löschen: ' + list.name"
-                  (click)="removeList(list.id); $event.stopPropagation()"
-                  (keydown.enter)="removeList(list.id); $event.stopPropagation()"
-                  (keydown.space)="removeList(list.id); $event.stopPropagation()"
-                >
-                  <fa-icon [icon]="closeIcon" />
-                </span>
-              }
-            </button>
-          }
-        </nav>
-      </section>
-
-      <form class="board__add-form" [formGroup]="form" (ngSubmit)="addList()">
-        <app-todo-text-input
-          class="board__list-input"
-          id="new-list"
-          label="Neue Liste"
-          [formControl]="form.controls.name"
-        />
-        <button type="submit" class="board__add-button" aria-label="Liste hinzufügen">
-          <fa-icon [icon]="plusIcon" />
-          <span>Hinzufügen</span>
-        </button>
-      </form>
-    </aside>
+    <app-todo-sidebar
+      [lists]="lists()"
+      [activeListId]="activeListId()"
+      [form]="form"
+      [plusIcon]="plusIcon"
+      [closeIcon]="closeIcon"
+      (listSelected)="switchList($event)"
+      (listRemoved)="removeList($event)"
+      (listAdded)="addList()"
+    />
 
     @if (activeList()) {
       <app-todo-card [listId]="activeListId()" [listName]="activeList()?.name" />

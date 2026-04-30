@@ -1,0 +1,45 @@
+<aside class="todo-sidebar" aria-label="Listen">
+  <section class="todo-sidebar__card" aria-label="Listenwahl">
+    <nav class="todo-sidebar__tabs" role="tablist" aria-label="Meine Listen">
+      @for (list of lists(); track list.id) {
+        <button
+          type="button"
+          role="tab"
+          class="todo-sidebar__tab"
+          [class.todo-sidebar__tab--active]="activeListId() === list.id"
+          [attr.aria-selected]="activeListId() === list.id"
+          (click)="selectList(list.id)"
+        >
+          <span class="todo-sidebar__tab-name">{{ list.name }}</span>
+          @if (lists().length > 1) {
+            <span
+              class="todo-sidebar__tab-close"
+              [class.todo-sidebar__tab-close--active]="activeListId() === list.id"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Liste löschen: ' + list.name"
+              (click)="removeList(list.id, $event)"
+              (keydown.enter)="removeList(list.id, $event)"
+              (keydown.space)="removeList(list.id, $event)"
+            >
+              <fa-icon [icon]="closeIcon()" />
+            </span>
+          }
+        </button>
+      }
+    </nav>
+  </section>
+
+  <form class="todo-sidebar__add-form" [formGroup]="form()" (ngSubmit)="addList()">
+    <app-todo-text-input
+      class="todo-sidebar__list-input"
+      id="new-list"
+      label="Neue Liste"
+      [formControl]="form().controls.name"
+    />
+    <button type="submit" class="todo-sidebar__add-button" aria-label="Liste hinzufügen">
+      <fa-icon [icon]="plusIcon()" />
+      <span>Hinzufügen</span>
+    </button>
+  </form>
+</aside>

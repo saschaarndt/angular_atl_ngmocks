@@ -1,16 +1,16 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, faPlus, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { TodoBoardStore } from '../+store/todo-board.store';
 import { TodoCard } from '../todo-card/todo-card';
-import { TodoTextInput } from '../todo-text-input/todo-text-input';
+import { TodoSidebar } from '../todo-sidebar/todo-sidebar';
 
 @Component({
   selector: 'app-todo-board',
-  imports: [TodoCard, ReactiveFormsModule, FontAwesomeModule, TodoTextInput],
+  imports: [TodoCard, FontAwesomeModule, TodoSidebar],
   templateUrl: './todo-board.html',
   styleUrl: './todo-board.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +21,6 @@ export class TodoBoard {
 
   readonly logoIcon = faCheck;
   readonly plusIcon = faPlus;
-  readonly deleteIcon = faTrashCan;
   readonly closeIcon = faXmark;
 
   readonly lists = this.#todoListsStore.lists;

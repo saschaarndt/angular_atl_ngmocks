@@ -1,6 +1,6 @@
 <aside class="todo-sidebar" aria-label="Listen">
   <section class="todo-sidebar__card" aria-label="Listenwahl">
-    <nav class="todo-sidebar__tabs" role="tablist" aria-label="Meine Listen">
+    <nav class="todo-sidebar__tabs" aria-label="Meine Listen">
       @for (list of lists(); track list.id) {
         <div
           class="todo-sidebar__tab-row"
@@ -8,15 +8,11 @@
         >
           <button
             type="button"
-            role="tab"
             class="todo-sidebar__tab"
-            [id]="tabId(list.id)"
+            [id]="'todo-list-button-' + list.id"
             [class.todo-sidebar__tab--active]="activeListId() === list.id"
-            [attr.aria-controls]="panelId(list.id)"
-            [attr.aria-selected]="activeListId() === list.id"
-            [attr.tabindex]="activeListId() === list.id ? 0 : -1"
+            [attr.aria-pressed]="activeListId() === list.id"
             (click)="selectList(list.id)"
-            (keydown)="onTabKeydown($event, list.id)"
           >
             <span class="todo-sidebar__tab-name">{{ list.name }}</span>
           </button>

@@ -57,6 +57,7 @@ export class TodoTextInput implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    this.#cdr.markForCheck();
   }
 
   onInput(event: Event): void {

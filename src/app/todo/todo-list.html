@@ -1,33 +1,37 @@
-<section class="todo-app">
-  <div class="todo-section">
-    <form class="todo-form" [formGroup]="form" (ngSubmit)="addTodo()">
+<section class="todo-list">
+  <div class="todo-list__section">
+    <form class="todo-list__form" [formGroup]="form" (ngSubmit)="addTodo()">
       <app-todo-text-input
         [id]="'new-todo-' + listId()"
         label="Neue Aufgabe"
         placeholder="Was muss erledigt werden?"
         [formControl]="form.controls.title"
       />
-      <button type="submit" class="btn-add" aria-label="Aufgabe hinzufügen">
+      <button type="submit" class="todo-list__add-button" aria-label="Aufgabe hinzufügen">
         <fa-icon [icon]="plusIcon" />
         <span>Hinzufügen</span>
       </button>
     </form>
 
     @if (todos().length > 0) {
-      <ul class="todo-list" role="list" [attr.aria-label]="currentList()?.name + ': Aufgaben'">
+      <ul
+        class="todo-list__items"
+        role="list"
+        [attr.aria-label]="currentList()?.name + ': Aufgaben'"
+      >
         @for (todo of filteredTodos(); track todo.id) {
-          <li class="todo-item" [class.is-completed]="todo.completed">
-            <div class="todo-label">
+          <li class="todo-list__item" [class.todo-list__item--completed]="todo.completed">
+            <div class="todo-list__label">
               <app-todo-checkbox
-                class="todo-checkbox"
+                class="todo-list__checkbox"
                 [formControl]="todoControl(todo)"
                 [label]="'Aufgabe als erledigt markieren: ' + todo.title"
               />
-              <span class="todo-title">{{ todo.title }}</span>
+              <span class="todo-list__title">{{ todo.title }}</span>
             </div>
             <button
               type="button"
-              class="btn-delete"
+              class="todo-list__delete-button"
               (click)="remove(todo.id)"
               [attr.aria-label]="'Aufgabe löschen: ' + todo.title"
             >
@@ -35,21 +39,21 @@
             </button>
           </li>
         } @empty {
-          <li class="todo-empty" role="listitem">Keine Aufgaben in dieser Ansicht.</li>
+          <li class="todo-list__empty" role="listitem">Keine Aufgaben in dieser Ansicht.</li>
         }
       </ul>
 
-      <footer class="todo-footer">
-        <span class="todo-count" aria-live="polite">
+      <footer class="todo-list__footer">
+        <span class="todo-list__count" aria-live="polite">
           {{ activeTodos().length }}
           {{ activeTodos().length === 1 ? 'Aufgabe' : 'Aufgaben' }} offen
         </span>
 
-        <div class="filter-group" role="group" aria-label="Ansicht filtern">
+        <div class="todo-list__filter-group" role="group" aria-label="Ansicht filtern">
           <button
             type="button"
-            class="filter-btn"
-            [class.active]="filter() === 'all'"
+            class="todo-list__filter-button"
+            [class.todo-list__filter-button--active]="filter() === 'all'"
             [attr.aria-pressed]="filter() === 'all'"
             (click)="setFilter('all')"
           >
@@ -57,8 +61,8 @@
           </button>
           <button
             type="button"
-            class="filter-btn"
-            [class.active]="filter() === 'active'"
+            class="todo-list__filter-button"
+            [class.todo-list__filter-button--active]="filter() === 'active'"
             [attr.aria-pressed]="filter() === 'active'"
             (click)="setFilter('active')"
           >
@@ -66,8 +70,8 @@
           </button>
           <button
             type="button"
-            class="filter-btn"
-            [class.active]="filter() === 'completed'"
+            class="todo-list__filter-button"
+            [class.todo-list__filter-button--active]="filter() === 'completed'"
             [attr.aria-pressed]="filter() === 'completed'"
             (click)="setFilter('completed')"
           >
@@ -76,7 +80,7 @@
         </div>
 
         @if (completedTodos().length > 0) {
-          <button type="button" class="btn-clear" (click)="clearCompleted()">
+          <button type="button" class="todo-list__clear-button" (click)="clearCompleted()">
             <fa-icon [icon]="clearIcon" />
             <span>Erledigte löschen</span>
           </button>

@@ -1,10 +1,10 @@
-<div class="material-field" [class.is-disabled]="disabled">
+<div class="todo-text-input" [class.todo-text-input--disabled]="disabled">
   <input
     #textInput
     [id]="id()"
     type="text"
-    class="material-input"
-    [class.is-keyboard-focused]="isKeyboardFocused()"
+    class="todo-text-input__control"
+    [class.todo-text-input__control--keyboard-focused]="isKeyboardFocused()"
     [value]="value"
     [placeholder]="placeholder()"
     [autocomplete]="autocomplete()"
@@ -14,6 +14,6 @@
     (input)="onInput($event)"
     (blur)="onBlur()"
   />
-  <label class="material-label" [for]="id()">{{ label() }}</label>
-  <span class="material-underline"></span>
+  <label class="todo-text-input__label" [for]="id()">{{ label() }}</label>
+  <span class="todo-text-input__underline"></span>
 </div>

@@ -1,9 +1,9 @@
-.todo-app {
+.todo-list {
   display: flex;
   flex-direction: column;
 }
 
-.todo-heading {
+.todo-list__heading {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-dark-blue);
@@ -12,17 +12,17 @@
 
 /* Form */
 
-.todo-form {
+.todo-list__form {
   display: flex;
   gap: 1rem;
   margin-bottom: 0;
 }
 
-.todo-form app-todo-text-input {
+.todo-list__form app-todo-text-input {
   flex: 1;
 }
 
-.btn-add {
+.todo-list__add-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -56,7 +56,7 @@
 
 /* List */
 
-.todo-list {
+.todo-list__items {
   list-style: none;
   margin: 0.75rem 0 0;
   padding: 0;
@@ -66,7 +66,7 @@
   box-shadow: 0 2px 8px rgba(0, 38, 65, 0.08);
 }
 
-.todo-item {
+.todo-list__item {
   display: flex;
   align-items: center;
   padding: 0.5rem 0.75rem;
@@ -77,13 +77,13 @@
     border-bottom: none;
   }
 
-  &.is-completed .todo-title {
+  &.todo-list__item--completed .todo-list__title {
     text-decoration: line-through;
     color: #8aa0b7;
   }
 }
 
-.todo-label {
+.todo-list__label {
   display: flex;
   align-items: center;
   flex: 1;
@@ -92,11 +92,11 @@
   min-width: 0;
 }
 
-.todo-checkbox {
+.todo-list__checkbox {
   flex-shrink: 0;
 }
 
-.todo-title {
+.todo-list__title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -104,7 +104,7 @@
   color: var(--color-dark-blue);
 }
 
-.btn-delete {
+.todo-list__delete-button {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -134,7 +134,7 @@
   }
 }
 
-.todo-empty {
+.todo-list__empty {
   padding: 1.5rem;
   text-align: center;
   color: var(--color-muted);
@@ -143,7 +143,7 @@
 
 /* Footer */
 
-.todo-footer {
+.todo-list__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -159,16 +159,16 @@
   box-shadow: 0 2px 8px rgba(0, 38, 65, 0.08);
 }
 
-.todo-count {
+.todo-list__count {
   min-width: 6.5rem;
 }
 
-.filter-group {
+.todo-list__filter-group {
   display: flex;
   gap: 0.25rem;
 }
 
-.filter-btn {
+.todo-list__filter-button {
   background: none;
   border: 1.5px solid transparent;
   border-radius: 50px;
@@ -187,7 +187,7 @@
     color: var(--color-sky-blue);
   }
 
-  &.active {
+  &.todo-list__filter-button--active {
     border-color: var(--color-sky-blue);
     background: var(--color-sky-blue);
     color: var(--color-white);
@@ -200,7 +200,7 @@
   }
 }
 
-.btn-clear {
+.todo-list__clear-button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;

@@ -1,9 +1,9 @@
-.material-field {
+.todo-text-input {
   position: relative;
   display: block;
 }
 
-.material-input {
+.todo-text-input__control {
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid #c2d3e0;
@@ -33,13 +33,13 @@
     outline: 1px solid var(--color-sky-blue);
   }
 
-  &.is-keyboard-focused {
+  &.todo-text-input__control--keyboard-focused {
     outline: 3px solid var(--color-dark-blue);
     outline-offset: 3px;
   }
 }
 
-.material-label {
+.todo-text-input__label {
   position: absolute;
   top: 50%;
   left: 0.875rem;
@@ -56,25 +56,25 @@
 }
 
 /* Underline wird nicht mehr gebraucht, bleibt hidden */
-.material-underline {
+.todo-text-input__underline {
   display: none;
 }
 
 /* Label floated → kleiner + hochgestellt */
-.material-input:focus + .material-label,
-.material-input:not(:placeholder-shown) + .material-label {
+.todo-text-input__control:focus + .todo-text-input__label,
+.todo-text-input__control:not(:placeholder-shown) + .todo-text-input__label {
   transform: translateY(-130%) scale(0.78);
   color: var(--color-sky-blue);
   font-weight: 600;
 }
 
-.material-field.is-disabled .material-input {
+.todo-text-input.todo-text-input--disabled .todo-text-input__control {
   color: #8aa0b7;
   border-color: #d6e4ef;
   background: #f4f8fb;
   cursor: not-allowed;
 }
 
-.material-field.is-disabled .material-label {
+.todo-text-input.todo-text-input--disabled .todo-text-input__label {
   color: #9eb0c0;
 }

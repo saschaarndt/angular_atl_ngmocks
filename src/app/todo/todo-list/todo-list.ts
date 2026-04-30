@@ -107,6 +107,7 @@ export class TodoList {
     this.#todoStore.add(this.listId(), title);
     this.form.reset({ title: '' });
     this.#cdr.markForCheck();
+    this.newTodoInput()?.focus();
   }
 
   remove(id: number): void {

@@ -132,7 +132,7 @@
   outline-offset: 3px;
 }
 
-.board__tab.board__tab--active {
+.board__tab--active {
   background: var(--color-dark-blue);
   color: var(--color-white);
   font-weight: 700;
@@ -174,12 +174,12 @@
   opacity: 1;
 }
 
-.board__tab.board__tab--active .board__tab-close {
+.board__tab--active .board__tab-close {
   color: rgba(255, 255, 255, 0.75);
   opacity: 1;
 }
 
-.board__tab.board__tab--active .board__tab-close:hover {
+.board__tab--active .board__tab-close:hover {
   background: rgba(255, 255, 255, 0.2);
   color: var(--color-white);
 }

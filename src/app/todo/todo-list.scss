@@ -78,7 +78,7 @@
   border-bottom: none;
 }
 
-.todo-list__item.todo-list__item--completed .todo-list__title {
+.todo-list__item--completed .todo-list__title {
   text-decoration: line-through;
   color: #8aa0b7;
 }
@@ -188,7 +188,7 @@
   color: var(--color-sky-blue);
 }
 
-.todo-list__filter-button.todo-list__filter-button--active {
+.todo-list__filter-button--active {
   border-color: var(--color-sky-blue);
   background: var(--color-sky-blue);
   color: var(--color-white);

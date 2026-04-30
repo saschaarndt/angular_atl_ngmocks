@@ -34,7 +34,7 @@
   outline: 1px solid var(--color-sky-blue);
 }
 
-.todo-text-input__control.todo-text-input__control--keyboard-focused {
+.todo-text-input__control--keyboard-focused {
   outline: 3px solid var(--color-dark-blue);
   outline-offset: 3px;
 }
@@ -68,13 +68,13 @@
   font-weight: 600;
 }
 
-.todo-text-input.todo-text-input--disabled .todo-text-input__control {
+.todo-text-input--disabled .todo-text-input__control {
   color: #8aa0b7;
   border-color: #d6e4ef;
   background: #f4f8fb;
   cursor: not-allowed;
 }
 
-.todo-text-input.todo-text-input--disabled .todo-text-input__label {
+.todo-text-input--disabled .todo-text-input__label {
   color: #9eb0c0;
 }

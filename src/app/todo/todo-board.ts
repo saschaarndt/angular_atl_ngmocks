@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { TodoCard } from './todo-card';
 import { TodoBoardStore } from './todo-board.store';
@@ -19,6 +19,7 @@ export class TodoBoard {
   readonly #document = inject(DOCUMENT);
   readonly #todoListsStore = inject(TodoBoardStore);
 
+  readonly logoIcon = faCheck;
   readonly plusIcon = faPlus;
   readonly deleteIcon = faTrashCan;
   readonly closeIcon = faXmark;

@@ -34,7 +34,17 @@
 .logo-icon {
   width: 28px;
   height: 28px;
+  border-radius: 6px;
+  background: var(--color-sky-blue);
+  color: var(--color-white);
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-check {
+  font-size: 0.95rem;
 }
 
 .logo-name {

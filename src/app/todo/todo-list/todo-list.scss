@@ -105,33 +105,46 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  background: none;
-  border: 1.5px solid transparent;
-  font-size: 0.875rem;
-  color: #9cb0c2;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(0, 38, 65, 0.1);
+  border: 1px solid transparent;
+  font-size: 0.75rem;
+  color: var(--color-dark-blue);
   cursor: pointer;
   padding: 0;
   line-height: 1;
-  border-radius: 50%;
+  border-radius: 6px;
   transition:
-    color 0.15s,
-    border-color 0.15s;
+    opacity 0.15s,
+    background 0.15s;
+}
+
+.todo-list__delete-button fa-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .todo-list__delete-button:hover {
+  opacity: 1;
+  background: var(--color-sky-blue);
   color: var(--color-dark-blue);
-  border-color: var(--color-border);
 }
 
 .todo-list__delete-button:focus-visible {
   outline: 3px solid var(--color-dark-blue);
   outline-offset: 3px;
+  opacity: 1;
 }
 
 .todo-list__empty {
-  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  padding: 0.5rem 0.75rem;
   text-align: center;
   color: var(--color-muted);
   font-style: italic;
@@ -187,6 +200,12 @@
   background: var(--color-sky-blue);
   color: var(--color-white);
   font-weight: 700;
+}
+
+.todo-list__filter-button--active:hover {
+  border-color: var(--color-sky-blue);
+  background: var(--color-sky-blue);
+  color: var(--color-white);
 }
 
 .todo-list__filter-button:focus-visible {

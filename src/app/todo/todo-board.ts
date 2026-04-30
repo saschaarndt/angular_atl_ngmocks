@@ -55,6 +55,7 @@ export class TodoBoard {
 
   switchList(id: number): void {
     this.activeListId.set(id);
+    this.#focusTodoInput(id);
   }
 
   #focusTodoInput(listId: number): void {

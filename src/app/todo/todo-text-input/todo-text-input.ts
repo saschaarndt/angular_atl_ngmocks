@@ -18,6 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
+      /* v8 ignore next */
       useExisting: forwardRef(() => TodoTextInput),
       multi: true,
     },

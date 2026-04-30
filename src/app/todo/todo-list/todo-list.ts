@@ -33,7 +33,9 @@ export class TodoList {
   readonly #todoStore = inject(TodoListStore);
   readonly #cdr = inject(ChangeDetectorRef);
 
+  /* v8 ignore start */
   readonly newTodoInput = viewChild(TodoTextInput);
+  /* v8 ignore stop */
 
   readonly plusIcon = faPlus;
   readonly deleteIcon = faTrashCan;

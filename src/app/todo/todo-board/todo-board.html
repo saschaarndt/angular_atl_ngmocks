@@ -21,8 +21,8 @@
       (listAdded)="addList()"
     />
 
-    @if (activeList()) {
-      <app-todo-card [listId]="activeListId()" [listName]="activeList()?.name" />
+    @if (activeList(); as selectedList) {
+      <app-todo-card [listId]="activeListId()" [listName]="selectedList.name" />
     }
   </main>
 

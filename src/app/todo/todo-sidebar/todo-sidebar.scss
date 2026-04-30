@@ -2,7 +2,6 @@
   width: 32ch;
   flex-shrink: 0;
   display: block;
-  padding-right: 2rem;
 }
 
 .todo-sidebar {
@@ -173,7 +172,6 @@
 @media (max-width: 680px) {
   :host {
     width: 100%;
-    padding-right: 0;
   }
 
   .todo-sidebar__tabs {

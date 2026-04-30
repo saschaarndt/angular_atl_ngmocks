@@ -1,8 +1,10 @@
 import '../../../test-setup';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ngMocks } from 'ng-mocks';
 
+import { TodoTextInputHarness } from './todo-text-input.harness';
 import { TodoTextInput } from './todo-text-input';
 
 describe('TodoTextInput', () => {
@@ -18,24 +20,27 @@ describe('TodoTextInput', () => {
       },
     });
     const component = fixture.componentInstance;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      TodoTextInputHarness,
+    );
 
     component.writeValue('Hallo');
     fixture.detectChanges();
 
-    const input = screen.getByLabelText('Titel') as HTMLInputElement;
     const label = screen.getByText('Titel') as HTMLLabelElement;
     const valueAccessors = fixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
 
-    expect(input.id).toBe('todo-input');
-    expect(input.placeholder).toBe('Text');
-    expect(input.autocomplete).toBe('name');
-    expect(input.value).toBe('Hallo');
+    await expect(harness.getLabelText()).resolves.toBe('Titel');
+    await expect(harness.getPlaceholder()).resolves.toBe('Text');
+    await expect(harness.getAutocomplete()).resolves.toBe('name');
+    await expect(harness.getValue()).resolves.toBe('Hallo');
     expect(label.textContent).toContain('Titel');
     expect(valueAccessors).toHaveLength(1);
 
     component.writeValue(undefined as unknown as string);
     fixture.detectChanges();
-    expect(input.value).toBe('');
+    await expect(harness.getValue()).resolves.toBe('');
   });
 
   it('meldet Eingaben, Disabled-State und Fokuszustände', async () => {
@@ -45,6 +50,10 @@ describe('TodoTextInput', () => {
       },
     });
     const component = fixture.componentInstance;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      TodoTextInputHarness,
+    );
     const onChange = vi.fn();
     const onTouched = vi.fn();
 
@@ -59,31 +68,32 @@ describe('TodoTextInput', () => {
     component.registerOnChange(onChange);
     component.registerOnTouched(onTouched);
 
-    input.value = 'Neu';
-    fireEvent.input(input);
-    fixture.detectChanges();
+    await harness.setValue('Neu');
 
     expect(onChange).toHaveBeenCalledWith('Neu');
+    await expect(harness.getValue()).resolves.toBe('Neu');
 
-    fireEvent.focus(input);
-    fixture.detectChanges();
+    await harness.focus();
     expect(component.isKeyboardFocused()).toBe(true);
+    await expect(harness.isKeyboardFocused()).resolves.toBe(true);
 
     fireEvent.mouseDown(input);
-    fireEvent.focus(input);
-    fixture.detectChanges();
+    await harness.focus();
     expect(component.isKeyboardFocused()).toBe(false);
+    await expect(harness.isKeyboardFocused()).resolves.toBe(false);
 
-    fireEvent.blur(input);
-    fixture.detectChanges();
+    await harness.blur();
     expect(onTouched).toHaveBeenCalled();
     expect(component.isKeyboardFocused()).toBe(false);
 
     component.setDisabledState(true);
     fixture.detectChanges();
-    expect(input.disabled).toBe(true);
+    await expect(harness.isDisabled()).resolves.toBe(true);
 
     component.focus();
     expect(focusSpy).toHaveBeenCalled();
+
+    await harness.setValue('');
+    await expect(harness.getValue()).resolves.toBe('');
   });
 });

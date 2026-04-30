@@ -1,7 +1,9 @@
 import '../../../test-setup';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { ngMocks } from 'ng-mocks';
 
+import { TodoBoardHarness } from './todo-board.harness';
 import { TodoBoard } from './todo-board';
 
 describe('TodoBoard', () => {
@@ -18,15 +20,18 @@ describe('TodoBoard', () => {
   it('fügt gültige Listen hinzu und ignoriert leere Eingaben', async () => {
     const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoBoardHarness);
 
     const beforeLength = component.lists().length;
-    component.form.controls.name.setValue('   ');
-    component.addList();
+    await harness.addList('   ');
 
     expect(component.lists()).toHaveLength(beforeLength);
 
-    component.form.controls.name.setValue('Neue Liste');
-    component.addList();
+    await expect(harness.getTitle()).resolves.toContain('Meine Aufgaben');
+    await expect(harness.getClaim()).resolves.toContain('Damit ich es nicht im Kopf haben muss.');
+    await expect(harness.hasCard()).resolves.toBe(true);
+
+    await harness.addList('Neue Liste');
     fixture.detectChanges();
     vi.runAllTimers();
 
@@ -34,15 +39,19 @@ describe('TodoBoard', () => {
     expect(component.activeListId()).toBe(4);
     expect(component.form.controls.name.value).toBe('');
     expect((document.activeElement as HTMLElement | null)?.id).toBe('new-todo-4');
+    expect(await harness.getCardHarness()).toBeTruthy();
   });
 
   it('setzt Fokus und aktive Liste beim Entfernen korrekt', async () => {
     const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoBoardHarness);
+    const sidebarHarness = await harness.getSidebarHarness();
 
     component.activeListId.set(2);
     fixture.detectChanges();
-    fireEvent.click(screen.getByRole('button', { name: 'Liste löschen: Büro' }));
+    await expect(sidebarHarness.getActiveListName()).resolves.toBe('Büro');
+    await harness.removeList('Büro');
     fixture.detectChanges();
     vi.runAllTimers();
 
@@ -51,7 +60,7 @@ describe('TodoBoard', () => {
 
     component.activeListId.set(1);
     fixture.detectChanges();
-    fireEvent.click(screen.getByRole('button', { name: 'Liste löschen: Einkaufen' }));
+    await harness.removeList('Einkaufen');
     fixture.detectChanges();
     vi.runAllTimers();
 
@@ -71,8 +80,9 @@ describe('TodoBoard', () => {
   it('wechselt die Liste und fokussiert das Eingabefeld', async () => {
     const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoBoardHarness);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Büro' }));
+    await harness.selectList('Büro');
     fixture.detectChanges();
     vi.runAllTimers();
 
@@ -83,21 +93,21 @@ describe('TodoBoard', () => {
   it('verdrahtet Sidebar-Outputs im Template und ignoriert fehlende Fokusziele', async () => {
     const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoBoardHarness);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Büro' }));
+    await harness.selectList('Büro');
     fixture.detectChanges();
     vi.runAllTimers();
     expect(component.activeListId()).toBe(2);
 
-    component.form.controls.name.setValue('Per Output');
-    fireEvent.click(screen.getByRole('button', { name: 'Liste hinzufügen' }));
+    await harness.addList('Per Output');
     fixture.detectChanges();
     vi.runAllTimers();
 
     expect(component.lists().at(-1)?.name).toBe('Per Output');
 
     const addedId = component.activeListId();
-    fireEvent.click(screen.getByRole('button', { name: 'Liste löschen: Per Output' }));
+    await harness.removeList('Per Output');
     fixture.detectChanges();
     vi.runAllTimers();
 

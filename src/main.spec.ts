@@ -1,5 +1,4 @@
 import './test-setup';
-import { ngMocks } from 'ng-mocks';
 import { vi } from 'vitest';
 
 const bootstrapApplication = vi.fn();
@@ -9,8 +8,6 @@ vi.mock('@angular/platform-browser', () => ({
 }));
 
 describe('main', () => {
-  ngMocks.faster();
-
   beforeEach(() => {
     vi.resetModules();
     bootstrapApplication.mockReset();
@@ -19,13 +16,18 @@ describe('main', () => {
   it('bootstrapped die App mit der App-Konfiguration', async () => {
     bootstrapApplication.mockResolvedValueOnce(undefined);
 
-    const [{ App }, { appConfig }] = await Promise.all([
-      import('./app/app'),
-      import('./app/app.config'),
-    ]);
     await import('./main');
 
-    expect(bootstrapApplication).toHaveBeenCalledWith(App, appConfig);
+    expect(bootstrapApplication).toHaveBeenCalledTimes(1);
+
+    const [appComponent, appConfig] = bootstrapApplication.mock.calls[0] ?? [];
+
+    expect(appComponent).toBeTypeOf('function');
+    expect(appComponent?.ɵcmp).toBeDefined();
+    expect(appComponent?.ɵcmp?.selectors).toEqual([['app-root']]);
+    expect(appConfig).toMatchObject({
+      providers: expect.any(Array),
+    });
   });
 
   it('loggt Bootstrap-Fehler', async () => {

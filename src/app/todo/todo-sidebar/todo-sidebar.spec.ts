@@ -1,9 +1,11 @@
 import '../../../test-setup';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { FormControl, FormGroup } from '@angular/forms';
-import { fireEvent, render, screen } from '@testing-library/angular';
+import { render, screen } from '@testing-library/angular';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { ngMocks } from 'ng-mocks';
 
+import { TodoSidebarHarness } from './todo-sidebar.harness';
 import { TodoSidebar } from './todo-sidebar';
 
 describe('TodoSidebar', () => {
@@ -25,6 +27,7 @@ describe('TodoSidebar', () => {
         closeIcon: faXmark,
       },
     });
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoSidebarHarness);
 
     const component = fixture.componentInstance;
     const selectedSpy = vi.fn();
@@ -35,23 +38,15 @@ describe('TodoSidebar', () => {
     component.listRemoved.subscribe(removedSpy);
     component.listAdded.subscribe(addedSpy);
 
-    const buttons = [
-      screen.getByRole('button', { name: 'Privat' }),
-      screen.getByRole('button', { name: 'Arbeit' }),
-    ] as HTMLButtonElement[];
-    const closeButtons = [
-      screen.getByRole('button', { name: 'Liste löschen: Privat' }),
-      screen.getByRole('button', { name: 'Liste löschen: Arbeit' }),
-    ] as HTMLButtonElement[];
-    const addButton = screen.getByRole('button', { name: 'Liste hinzufügen' });
+    await expect(harness.getListNames()).resolves.toEqual(['Privat', 'Arbeit']);
+    await expect(harness.getActiveListName()).resolves.toBe('Arbeit');
+    await expect(harness.hasRemoveButton('Privat')).resolves.toBe(true);
+    await expect((await harness.getListInputHarness()).getLabelText()).resolves.toBe('Neue Liste');
+    await expect(harness.selectList('Fehlt')).rejects.toThrow('List button not found: Fehlt');
 
-    expect(buttons).toHaveLength(2);
-    expect(closeButtons).toHaveLength(2);
-    expect(buttons[1].getAttribute('aria-pressed')).toBe('true');
-
-    fireEvent.click(buttons[0]);
-    fireEvent.click(closeButtons[1]);
-    fireEvent.click(addButton);
+    await harness.selectList('Privat');
+    await harness.removeList('Arbeit');
+    await harness.addList('Neu');
 
     expect(selectedSpy).toHaveBeenCalledWith(1);
     expect(removedSpy).toHaveBeenCalledWith(2);
@@ -63,7 +58,7 @@ describe('TodoSidebar', () => {
       name: new FormControl('', { nonNullable: true }),
     });
 
-    await render(TodoSidebar, {
+    const { fixture } = await render(TodoSidebar, {
       inputs: {
         lists: [{ id: 1, name: 'Privat' }],
         activeListId: 1,
@@ -72,7 +67,15 @@ describe('TodoSidebar', () => {
         closeIcon: faXmark,
       },
     });
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoSidebarHarness);
 
+    await expect(harness.getListNames()).resolves.toEqual(['Privat']);
+    await expect(harness.getActiveListName()).resolves.toBe('Privat');
+    await expect(harness.hasRemoveButton('Privat')).resolves.toBe(false);
     expect(screen.queryByRole('button', { name: 'Liste löschen: Privat' })).toBeNull();
+
+    fixture.componentRef.setInput('activeListId', 999);
+    fixture.detectChanges();
+    await expect(harness.getActiveListName()).resolves.toBeNull();
   });
 });

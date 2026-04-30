@@ -1,7 +1,9 @@
 import '../../../test-setup';
-import { fireEvent, render, screen } from '@testing-library/angular';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { render } from '@testing-library/angular';
 import { ngMocks } from 'ng-mocks';
 
+import { TodoCheckboxHarness } from './todo-checkbox.harness';
 import { TodoCheckbox } from './todo-checkbox';
 
 describe('TodoCheckbox', () => {
@@ -17,21 +19,22 @@ describe('TodoCheckbox', () => {
     fixture.componentRef.setInput('checked', true);
     fixture.detectChanges();
 
-    const button = screen.getByRole('checkbox', { name: 'Testaufgabe' }) as HTMLButtonElement;
-    expect(button.getAttribute('aria-label')).toBe('Testaufgabe');
-    expect(button.getAttribute('aria-checked')).toBe('true');
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TodoCheckboxHarness);
+
+    await expect(harness.getLabel()).resolves.toBe('Testaufgabe');
+    await expect(harness.isChecked()).resolves.toBe(true);
     expect(component.checkedIcon).toBeTruthy();
     expect(component.uncheckedIcon).toBeTruthy();
 
-    fireEvent.click(button);
+    await harness.toggle();
     expect(changedSpy).toHaveBeenCalledWith(false);
 
     fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
 
-    fireEvent.click(button);
+    await harness.toggle();
     component.onToggle();
     expect(changedSpy).toHaveBeenCalledTimes(1);
-    expect(button.disabled).toBe(true);
+    await expect(harness.isDisabled()).resolves.toBe(true);
   });
 });

@@ -1,8 +1,12 @@
+import '../../../test-setup';
 import { fireEvent, render, screen } from '@testing-library/angular';
+import { ngMocks } from 'ng-mocks';
 
 import { TodoBoard } from './todo-board';
 
 describe('TodoBoard', () => {
+  ngMocks.faster();
+
   beforeEach(() => {
     vi.useFakeTimers();
   });

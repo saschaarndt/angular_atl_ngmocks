@@ -1,10 +1,14 @@
+import '../../../test-setup';
 import { FormControl, FormGroup } from '@angular/forms';
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { ngMocks } from 'ng-mocks';
 
 import { TodoSidebar } from './todo-sidebar';
 
 describe('TodoSidebar', () => {
+  ngMocks.faster();
+
   it('rendert Listen und emittiert Events', async () => {
     const form = new FormGroup({
       name: new FormControl('', { nonNullable: true }),

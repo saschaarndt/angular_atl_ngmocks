@@ -1,9 +1,13 @@
+import '../../../test-setup';
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ngMocks } from 'ng-mocks';
 
 import { TodoTextInput } from './todo-text-input';
 
 describe('TodoTextInput', () => {
+  ngMocks.faster();
+
   it('bindet Werte und Attribute korrekt', async () => {
     const { fixture } = await render(TodoTextInput, {
       inputs: {

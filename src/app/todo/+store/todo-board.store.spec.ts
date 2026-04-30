@@ -1,8 +1,12 @@
+import '../../../test-setup';
+import { ngMocks } from 'ng-mocks';
 import { TestBed } from '@angular/core/testing';
 
 import { TodoBoardStore } from './todo-board.store';
 
 describe('TodoBoardStore', () => {
+  ngMocks.faster();
+
   beforeEach(() => {
     TestBed.configureTestingModule({});
   });

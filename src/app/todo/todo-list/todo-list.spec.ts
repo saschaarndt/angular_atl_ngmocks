@@ -1,4 +1,6 @@
+import '../../../test-setup';
 import { fireEvent, render, screen } from '@testing-library/angular';
+import { ngMocks } from 'ng-mocks';
 
 import { TodoBoardStore } from '../+store/todo-board.store';
 import { TodoListStore } from '../+store/todo-list.store';
@@ -6,6 +8,8 @@ import { TodoTextInput } from '../todo-text-input/todo-text-input';
 import { TodoList } from './todo-list';
 
 describe('TodoList', () => {
+  ngMocks.faster();
+
   beforeEach(() => {
     vi.useFakeTimers();
   });

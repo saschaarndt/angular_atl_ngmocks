@@ -1,22 +1,26 @@
-import { render, screen } from '@testing-library/angular';
+import '../../../test-setup';
+import { MockBuilder, MockRender, ngMocks } from 'ng-mocks';
 
 import { TodoCard } from './todo-card';
+import { TodoList } from '../todo-list/todo-list';
 
 describe('TodoCard', () => {
-  it('rendert das Listen-Label und reicht die listId weiter', async () => {
-    const { fixture } = await render(TodoCard, {
-      inputs: {
-        listId: 5,
-        listName: 'Inbox',
-      },
+  ngMocks.faster();
+
+  beforeEach(() => MockBuilder(TodoCard).mock(TodoList));
+
+  it('rendert das Listen-Label und reicht die listId weiter', () => {
+    const fixture = MockRender(TodoCard, {
+      listId: 5,
+      listName: 'Inbox',
     });
 
-    const section = screen.getByLabelText('Inbox') as HTMLElement;
-    const input = screen.getByLabelText('Neue Aufgabe') as HTMLInputElement;
+    const section = ngMocks.find('section').nativeElement as HTMLElement;
+    const todoList = ngMocks.findInstance(TodoList);
 
-    expect(section.tagName).toBe('SECTION');
     expect(section.getAttribute('aria-label')).toBe('Inbox');
-    expect(input.id).toBe('new-todo-5');
-    expect(fixture.componentInstance).toBeTruthy();
+    expect(ngMocks.find('app-todo-list')).toBeTruthy();
+    expect(todoList.listId).toBe(5);
+    expect(fixture.point.componentInstance).toBeTruthy();
   });
 });

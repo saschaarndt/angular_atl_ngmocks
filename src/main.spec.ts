@@ -1,3 +1,5 @@
+import './test-setup';
+import { ngMocks } from 'ng-mocks';
 import { vi } from 'vitest';
 
 const bootstrapApplication = vi.fn();
@@ -7,6 +9,8 @@ vi.mock('@angular/platform-browser', () => ({
 }));
 
 describe('main', () => {
+  ngMocks.faster();
+
   beforeEach(() => {
     vi.resetModules();
     bootstrapApplication.mockReset();

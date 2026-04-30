@@ -1,8 +1,12 @@
+import '../../../test-setup';
 import { fireEvent, render, screen } from '@testing-library/angular';
+import { ngMocks } from 'ng-mocks';
 
 import { TodoCheckbox } from './todo-checkbox';
 
 describe('TodoCheckbox', () => {
+  ngMocks.faster();
+
   it('rendert und toggelt den Checkbox-Zustand', async () => {
     const { fixture } = await render(TodoCheckbox);
     const component = fixture.componentInstance;

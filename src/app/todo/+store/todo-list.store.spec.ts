@@ -1,8 +1,12 @@
+import '../../../test-setup';
+import { ngMocks } from 'ng-mocks';
 import { TestBed } from '@angular/core/testing';
 
 import { TodoListStore } from './todo-list.store';
 
 describe('TodoListStore', () => {
+  ngMocks.faster();
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [TodoListStore],

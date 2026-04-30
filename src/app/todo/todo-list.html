@@ -1,0 +1,87 @@
+<section class="todo-app">
+  <div class="todo-section">
+    <form class="todo-form" [formGroup]="form" (ngSubmit)="addTodo()">
+      <app-todo-text-input
+        [id]="'new-todo-' + listId()"
+        label="Neue Aufgabe"
+        placeholder="Was muss erledigt werden?"
+        [formControl]="form.controls.title"
+      />
+      <button type="submit" class="btn-add" aria-label="Aufgabe hinzufügen">
+        <fa-icon [icon]="plusIcon" />
+        <span>Hinzufügen</span>
+      </button>
+    </form>
+
+    @if (todos().length > 0) {
+      <ul class="todo-list" role="list" [attr.aria-label]="currentList()?.name + ': Aufgaben'">
+        @for (todo of filteredTodos(); track todo.id) {
+          <li class="todo-item" [class.is-completed]="todo.completed">
+            <div class="todo-label">
+              <app-todo-checkbox
+                class="todo-checkbox"
+                [formControl]="todoControl(todo)"
+                [label]="'Aufgabe als erledigt markieren: ' + todo.title"
+              />
+              <span class="todo-title">{{ todo.title }}</span>
+            </div>
+            <button
+              type="button"
+              class="btn-delete"
+              (click)="remove(todo.id)"
+              [attr.aria-label]="'Aufgabe löschen: ' + todo.title"
+            >
+              <fa-icon [icon]="deleteIcon" />
+            </button>
+          </li>
+        } @empty {
+          <li class="todo-empty" role="listitem">Keine Aufgaben in dieser Ansicht.</li>
+        }
+      </ul>
+
+      <footer class="todo-footer">
+        <span class="todo-count" aria-live="polite">
+          {{ activeTodos().length }}
+          {{ activeTodos().length === 1 ? 'Aufgabe' : 'Aufgaben' }} offen
+        </span>
+
+        <div class="filter-group" role="group" aria-label="Ansicht filtern">
+          <button
+            type="button"
+            class="filter-btn"
+            [class.active]="filter() === 'all'"
+            [attr.aria-pressed]="filter() === 'all'"
+            (click)="setFilter('all')"
+          >
+            Alle
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            [class.active]="filter() === 'active'"
+            [attr.aria-pressed]="filter() === 'active'"
+            (click)="setFilter('active')"
+          >
+            Aktiv
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            [class.active]="filter() === 'completed'"
+            [attr.aria-pressed]="filter() === 'completed'"
+            (click)="setFilter('completed')"
+          >
+            Erledigt
+          </button>
+        </div>
+
+        @if (completedTodos().length > 0) {
+          <button type="button" class="btn-clear" (click)="clearCompleted()">
+            <fa-icon [icon]="clearIcon" />
+            <span>Erledigte löschen</span>
+          </button>
+        }
+      </footer>
+    }
+  </div>
+</section>

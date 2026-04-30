@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="todo-checkbox"
+  role="checkbox"
+  [disabled]="disabled"
+  [attr.aria-checked]="checked"
+  [attr.aria-label]="label()"
+  (click)="onToggle()"
+  (blur)="onBlur()"
+>
+  <fa-icon [icon]="checked ? checkedIcon : uncheckedIcon" />
+</button>

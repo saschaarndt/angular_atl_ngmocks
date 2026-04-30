@@ -1,0 +1,80 @@
+.material-field {
+  position: relative;
+  display: block;
+}
+
+.material-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #c2d3e0;
+  border-radius: 8px;
+  background: var(--color-white);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--color-dark-blue);
+  padding: 1.35rem 0.875rem 0.4rem;
+  outline: none;
+  transition: border-color 0.18s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:focus::placeholder {
+    color: #a0b8cc;
+  }
+
+  &:hover {
+    outline: 1px solid #c2d3e0;
+  }
+
+  &:focus {
+    border-color: var(--color-sky-blue);
+    outline: 1px solid var(--color-sky-blue);
+  }
+
+  &.is-keyboard-focused {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 3px;
+  }
+}
+
+.material-label {
+  position: absolute;
+  top: 50%;
+  left: 0.875rem;
+  color: var(--color-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+  transform-origin: left top;
+  transition:
+    transform 140ms ease,
+    color 140ms ease,
+    font-size 140ms ease;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Underline wird nicht mehr gebraucht, bleibt hidden */
+.material-underline {
+  display: none;
+}
+
+/* Label floated → kleiner + hochgestellt */
+.material-input:focus + .material-label,
+.material-input:not(:placeholder-shown) + .material-label {
+  transform: translateY(-130%) scale(0.78);
+  color: var(--color-sky-blue);
+  font-weight: 600;
+}
+
+.material-field.is-disabled .material-input {
+  color: #8aa0b7;
+  border-color: #d6e4ef;
+  background: #f4f8fb;
+  cursor: not-allowed;
+}
+
+.material-field.is-disabled .material-label {
+  color: #9eb0c0;
+}

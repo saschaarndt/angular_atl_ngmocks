@@ -1,0 +1,73 @@
+<div class="board-wrapper">
+  <!-- Seitenweiter Header -->
+  <header class="page-header" role="banner">
+    <span class="page-header-logo" aria-label="Meine Aufgaben">
+      <svg class="logo-icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <rect width="28" height="28" rx="6" fill="#0caaff" />
+        <path
+          d="M7 14 l5 5 l9-9"
+          stroke="#fff"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"
+        />
+      </svg>
+      <span class="logo-name">Meine Aufgaben</span>
+    </span>
+    <span class="page-header-claim">Weil du vergesslich bist.</span>
+  </header>
+
+  <!-- Hauptfläche -->
+  <main class="board-main">
+    <!-- Linke Seite: Listenverwaltung -->
+    <aside class="board-sidebar" aria-label="Listen">
+      <section class="sidebar-card" aria-label="Listenwahl">
+        <!-- Tabs -->
+        <nav class="tab-list" role="tablist" aria-label="Meine Listen">
+          @for (list of lists(); track list.id) {
+            <button
+              type="button"
+              role="tab"
+              class="tab-item"
+              [class.is-active]="activeListId() === list.id"
+              [attr.aria-selected]="activeListId() === list.id"
+              (click)="switchList(list.id)"
+            >
+              <span class="tab-name">{{ list.name }}</span>
+              @if (lists().length > 1) {
+                <span
+                  class="tab-close"
+                  role="button"
+                  tabindex="0"
+                  [attr.aria-label]="'Liste löschen: ' + list.name"
+                  (click)="removeList(list.id); $event.stopPropagation()"
+                  (keydown.enter)="removeList(list.id); $event.stopPropagation()"
+                  (keydown.space)="removeList(list.id); $event.stopPropagation()"
+                >
+                  <fa-icon [icon]="closeIcon" />
+                </span>
+              }
+            </button>
+          }
+        </nav>
+      </section>
+
+      <!-- Neue Liste -->
+      <form class="sidebar-add-form" [formGroup]="form" (ngSubmit)="addList()">
+        <app-todo-text-input id="new-list" label="Neue Liste" [formControl]="form.controls.name" />
+        <button type="submit" class="sidebar-add-btn" aria-label="Liste hinzufügen">
+          <fa-icon [icon]="plusIcon" />
+          <span>Hinzufügen</span>
+        </button>
+      </form>
+    </aside>
+
+    <!-- Rechte Seite: Aktive Liste -->
+    @if (activeList()) {
+      <app-todo-card [listId]="activeListId()" [listName]="activeList()?.name" />
+    }
+  </main>
+
+  <footer class="page-footer"></footer>
+</div>

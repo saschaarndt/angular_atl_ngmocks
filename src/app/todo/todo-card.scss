@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+
+.board-content {
+  width: 100%;
+  background: var(--color-surface);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 24px rgba(0, 38, 65, 0.07);
+  padding: 1rem;
+}

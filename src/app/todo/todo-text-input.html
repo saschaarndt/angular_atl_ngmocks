@@ -1,0 +1,19 @@
+<div class="material-field" [class.is-disabled]="disabled">
+  <input
+    #textInput
+    [id]="id()"
+    type="text"
+    class="material-input"
+    [class.is-keyboard-focused]="isKeyboardFocused()"
+    [value]="value"
+    [placeholder]="placeholder()"
+    [autocomplete]="autocomplete()"
+    [disabled]="disabled"
+    (mousedown)="onMouseDown()"
+    (focus)="onFocus()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+  <label class="material-label" [for]="id()">{{ label() }}</label>
+  <span class="material-underline"></span>
+</div>

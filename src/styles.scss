@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --color-dark-blue: #002641;
+  --color-sky-blue: #0caaff;
+  --color-white: #ffffff;
+  --color-lavender: #babaff;
+
+  --color-text: var(--color-dark-blue);
+  --color-bg: #f3f6ff;
+  --color-surface: var(--color-white);
+  --color-border: #d6e0ee;
+  --color-muted: #5d7288;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  background: radial-gradient(circle at top right, #e8edff 0%, var(--color-bg) 38%);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}

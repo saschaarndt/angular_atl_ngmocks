@@ -1,0 +1,21 @@
+.todo-checkbox {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1.35rem;
+  color: var(--color-sky-blue);
+  cursor: pointer;
+  line-height: 1;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}

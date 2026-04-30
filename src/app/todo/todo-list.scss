@@ -1,0 +1,228 @@
+.todo-app {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-dark-blue);
+  margin: 0 0 1rem;
+}
+
+/* Form */
+
+.todo-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.todo-form app-todo-text-input {
+  flex: 1;
+}
+
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--color-sky-blue);
+  color: var(--color-white);
+  border: 2px solid var(--color-sky-blue);
+  border-radius: 50px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    box-shadow 0.18s;
+
+  &:hover {
+    background: #0896e2;
+    border-color: #0896e2;
+    box-shadow: 4px 6px 10px rgba(12, 170, 255, 0.35);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 3px;
+  }
+}
+
+/* List */
+
+.todo-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px 4px 0 0;
+  background: var(--color-surface);
+  box-shadow: 0 2px 8px rgba(0, 38, 65, 0.08);
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  min-height: 3.25rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.is-completed .todo-title {
+    text-decoration: line-through;
+    color: #8aa0b7;
+  }
+}
+
+.todo-label {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 0.75rem;
+  font-size: 1.125rem;
+  min-width: 0;
+}
+
+.todo-checkbox {
+  flex-shrink: 0;
+}
+
+.todo-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+  color: var(--color-dark-blue);
+}
+
+.btn-delete {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: 1.5px solid transparent;
+  font-size: 0.875rem;
+  color: #9cb0c2;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  border-radius: 50%;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+
+  &:hover {
+    color: var(--color-dark-blue);
+    border-color: var(--color-border);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 3px;
+  }
+}
+
+.todo-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* Footer */
+
+.todo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 8px rgba(0, 38, 65, 0.08);
+}
+
+.todo-count {
+  min-width: 6.5rem;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.filter-btn {
+  background: none;
+  border: 1.5px solid transparent;
+  border-radius: 50px;
+  padding: 0.25rem 0.875rem;
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    border-color: var(--color-sky-blue);
+    color: var(--color-sky-blue);
+  }
+
+  &.active {
+    border-color: var(--color-sky-blue);
+    background: var(--color-sky-blue);
+    color: var(--color-white);
+    font-weight: 700;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 3px;
+  }
+}
+
+.btn-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50px;
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.25rem 0.875rem;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    border-color: var(--color-sky-blue);
+    color: var(--color-sky-blue);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-dark-blue);
+    outline-offset: 3px;
+  }
+}

@@ -1,3 +1,8 @@
-<section class="todo-card" role="tabpanel" [attr.aria-label]="listName()">
+<section
+  class="todo-card"
+  role="tabpanel"
+  [id]="'todo-panel-' + listId()"
+  [attr.aria-labelledby]="'todo-tab-' + listId()"
+>
   <app-todo-list [listId]="listId()" />
 </section>

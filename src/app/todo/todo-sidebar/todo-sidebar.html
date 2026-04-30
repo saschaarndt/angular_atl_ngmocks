@@ -10,9 +10,13 @@
             type="button"
             role="tab"
             class="todo-sidebar__tab"
+            [id]="tabId(list.id)"
             [class.todo-sidebar__tab--active]="activeListId() === list.id"
+            [attr.aria-controls]="panelId(list.id)"
             [attr.aria-selected]="activeListId() === list.id"
+            [attr.tabindex]="activeListId() === list.id ? 0 : -1"
             (click)="selectList(list.id)"
+            (keydown)="onTabKeydown($event, list.id)"
           >
             <span class="todo-sidebar__tab-name">{{ list.name }}</span>
           </button>

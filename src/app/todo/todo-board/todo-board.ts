@@ -45,11 +45,22 @@ export class TodoBoard {
   }
 
   removeList(id: number): void {
+    const activeListId = this.activeListId();
     this.#todoListsStore.removeList(id);
     const remaining = this.lists();
-    if (this.activeListId() === id && remaining.length > 0) {
-      this.activeListId.set(remaining[0].id);
+    if (remaining.length === 0) {
+      this.activeListId.set(0);
+      this.#focusElement('new-list');
+      return;
     }
+
+    const nextListId = activeListId === id ? remaining[0].id : activeListId;
+
+    if (activeListId === id) {
+      this.activeListId.set(nextListId);
+    }
+
+    this.#focusElement(`todo-tab-${nextListId}`);
   }
 
   switchList(id: number): void {
@@ -58,10 +69,14 @@ export class TodoBoard {
   }
 
   #focusTodoInput(listId: number): void {
+    this.#focusElement(`new-todo-${listId}`);
+  }
+
+  #focusElement(elementId: string): void {
     setTimeout(() => {
-      const input = this.#document.getElementById(`new-todo-${listId}`);
-      if (input instanceof HTMLInputElement) {
-        input.focus();
+      const element = this.#document.getElementById(elementId);
+      if (element instanceof HTMLElement) {
+        element.focus();
       }
     });
   }

@@ -4,9 +4,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { TodoCard } from './todo-card';
-import { TodoBoardStore } from './todo-board.store';
-import { TodoTextInput } from './todo-text-input';
+import { TodoBoardStore } from '../+store/todo-board.store';
+import { TodoCard } from '../todo-card/todo-card';
+import { TodoTextInput } from '../todo-text-input/todo-text-input';
 
 @Component({
   selector: 'app-todo-board',

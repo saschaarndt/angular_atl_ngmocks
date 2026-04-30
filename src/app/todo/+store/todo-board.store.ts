@@ -1,6 +1,6 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 
-import { TodoListModel } from './todo.model';
+import { TodoListModel } from '../todo.model';
 
 type TodoBoardState = {
   lists: TodoListModel[];

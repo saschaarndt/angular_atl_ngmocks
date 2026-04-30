@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { TodoList } from './todo-list';
+import { TodoList } from '../todo-list/todo-list';
 
 @Component({
   selector: 'app-todo-card',

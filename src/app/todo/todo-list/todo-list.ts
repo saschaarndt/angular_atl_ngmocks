@@ -15,11 +15,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBroom, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
-import { FilterType, Todo } from './todo.model';
-import { TodoCheckbox } from './todo-checkbox';
-import { TodoBoardStore } from './todo-board.store';
-import { TodoListStore } from './todo-list.store';
-import { TodoTextInput } from './todo-text-input';
+import { TodoBoardStore } from '../+store/todo-board.store';
+import { TodoCheckbox } from '../todo-checkbox/todo-checkbox';
+import { TodoListStore } from '../+store/todo-list.store';
+import { FilterType, Todo } from '../todo.model';
+import { TodoTextInput } from '../todo-text-input/todo-text-input';
 
 @Component({
   selector: 'app-todo-list',

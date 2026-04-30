@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fireEvent, render, screen } from '@testing-library/angular';
 
 import { TodoBoardStore } from '../+store/todo-board.store';
 import { TodoListStore } from '../+store/todo-list.store';
@@ -16,13 +16,13 @@ describe('TodoList', () => {
   });
 
   async function createComponent(listId = 1) {
-    await TestBed.configureTestingModule({
-      imports: [TodoList],
-    }).compileComponents();
-
     const focusSpy = vi.spyOn(TodoTextInput.prototype, 'focus').mockImplementation(() => undefined);
-    const fixture = TestBed.createComponent(TodoList);
-    fixture.componentRef.setInput('listId', listId);
+    const { fixture } = await render(TodoList, {
+      inputs: {
+        listId,
+      },
+    });
+
     fixture.detectChanges();
     vi.runAllTimers();
     fixture.detectChanges();
@@ -30,7 +30,7 @@ describe('TodoList', () => {
     return {
       fixture,
       component: fixture.componentInstance,
-      boardStore: TestBed.inject(TodoBoardStore),
+      boardStore: fixture.debugElement.injector.get(TodoBoardStore),
       todoStore: fixture.debugElement.injector.get(TodoListStore),
       focusSpy,
     };
@@ -101,13 +101,12 @@ describe('TodoList', () => {
   it('verdrahtet die Template-Interaktionen über DOM-Events', async () => {
     const { fixture, component, todoStore } = await createComponent(1);
 
-    const input = fixture.nativeElement.querySelector('#new-todo-1') as HTMLInputElement;
-    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    const input = screen.getByLabelText('Neue Aufgabe') as HTMLInputElement;
+    const form = input.closest('form') as HTMLFormElement;
 
-    input.value = 'Aufgabe 1';
-    input.dispatchEvent(new Event('input'));
+    fireEvent.input(input, { target: { value: 'Aufgabe 1' } });
     fixture.detectChanges();
-    form.dispatchEvent(new Event('submit'));
+    fireEvent.submit(form);
     fixture.detectChanges();
 
     todoStore.add(1, 'Aufgabe 2');
@@ -118,47 +117,43 @@ describe('TodoList', () => {
     expect(component.activeTodos()).toHaveLength(1);
     expect(component.completedTodos()).toHaveLength(1);
 
-    const filterButtons = Array.from(
-      fixture.nativeElement.querySelectorAll('.todo-list__filter-button'),
-    ) as HTMLButtonElement[];
+    const filterButtons = [
+      screen.getByRole('button', { name: 'Alle' }),
+      screen.getByRole('button', { name: 'Aktiv' }),
+      screen.getByRole('button', { name: 'Erledigt' }),
+    ];
 
-    filterButtons[2].click();
+    fireEvent.click(filterButtons[2]);
     fixture.detectChanges();
     expect(component.filter()).toBe('completed');
 
-    const deleteButton = fixture.nativeElement.querySelector(
-      '.todo-list__delete-button',
-    ) as HTMLButtonElement;
-    deleteButton.click();
+    const deleteButton = screen.getByRole('button', { name: 'Aufgabe löschen: Aufgabe 2' });
+    fireEvent.click(deleteButton);
     fixture.detectChanges();
     expect(todoStore.todos().map((todo) => todo.id)).toEqual([1]);
 
-    filterButtons[0].click();
+    fireEvent.click(filterButtons[0]);
     fixture.detectChanges();
     expect(component.filter()).toBe('all');
 
-    const checkboxButton = fixture.nativeElement.querySelector(
-      'button.todo-checkbox',
-    ) as HTMLButtonElement;
-    checkboxButton.click();
+    const checkboxButton = screen.getByRole('checkbox', {
+      name: 'Aufgabe als erledigt markieren: Aufgabe 1',
+    });
+    fireEvent.click(checkboxButton);
     fixture.detectChanges();
     expect(todoStore.todos()[0].completed).toBe(true);
 
-    filterButtons[1].click();
+    fireEvent.click(filterButtons[1]);
     fixture.detectChanges();
     expect(component.filter()).toBe('active');
-    expect(fixture.nativeElement.querySelector('.todo-list__empty')?.textContent).toContain(
-      'Keine Aufgaben in dieser Ansicht.',
-    );
+    expect(screen.getByText('Keine Aufgaben in dieser Ansicht.')).toBeTruthy();
 
-    filterButtons[2].click();
+    fireEvent.click(filterButtons[2]);
     fixture.detectChanges();
     expect(component.filter()).toBe('completed');
 
-    const clearButton = fixture.nativeElement.querySelector(
-      '.todo-list__clear-button',
-    ) as HTMLButtonElement;
-    clearButton.click();
+    const clearButton = screen.getByRole('button', { name: 'Erledigte löschen' });
+    fireEvent.click(clearButton);
     fixture.detectChanges();
     expect(todoStore.todos()).toEqual([]);
   });

@@ -1,24 +1,22 @@
-import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { render, screen } from '@testing-library/angular';
 
 import { TodoCard } from './todo-card';
-import { TodoList } from '../todo-list/todo-list';
 
 describe('TodoCard', () => {
   it('rendert das Listen-Label und reicht die listId weiter', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoCard],
-    }).compileComponents();
+    const { fixture } = await render(TodoCard, {
+      inputs: {
+        listId: 5,
+        listName: 'Inbox',
+      },
+    });
 
-    const fixture = TestBed.createComponent(TodoCard);
-    fixture.componentRef.setInput('listId', 5);
-    fixture.componentRef.setInput('listName', 'Inbox');
-    fixture.detectChanges();
+    const section = screen.getByLabelText('Inbox') as HTMLElement;
+    const input = screen.getByLabelText('Neue Aufgabe') as HTMLInputElement;
 
-    const todoListDebugElement = fixture.debugElement.query(By.directive(TodoList));
-    const section = fixture.nativeElement.querySelector('section') as HTMLElement;
-
+    expect(section.tagName).toBe('SECTION');
     expect(section.getAttribute('aria-label')).toBe('Inbox');
-    expect(todoListDebugElement.componentInstance.listId()).toBe(5);
+    expect(input.id).toBe('new-todo-5');
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

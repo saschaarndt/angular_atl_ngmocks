@@ -1,9 +1,6 @@
-import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { fireEvent, render, screen } from '@testing-library/angular';
 
 import { TodoBoard } from './todo-board';
-import { TodoBoardStore } from '../+store/todo-board.store';
-import { TodoSidebar } from '../todo-sidebar/todo-sidebar';
 
 describe('TodoBoard', () => {
   beforeEach(() => {
@@ -15,13 +12,8 @@ describe('TodoBoard', () => {
   });
 
   it('fügt gültige Listen hinzu und ignoriert leere Eingaben', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoBoard],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(TodoBoard);
+    const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
-    fixture.detectChanges();
 
     const beforeLength = component.lists().length;
     component.form.controls.name.setValue('   ');
@@ -41,19 +33,12 @@ describe('TodoBoard', () => {
   });
 
   it('setzt Fokus und aktive Liste beim Entfernen korrekt', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoBoard],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(TodoBoard);
+    const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
-    const store = TestBed.inject(TodoBoardStore);
-
-    fixture.detectChanges();
 
     component.activeListId.set(2);
     fixture.detectChanges();
-    component.removeList(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Liste löschen: Büro' }));
     fixture.detectChanges();
     vi.runAllTimers();
 
@@ -62,17 +47,15 @@ describe('TodoBoard', () => {
 
     component.activeListId.set(1);
     fixture.detectChanges();
-    component.removeList(3);
+    fireEvent.click(screen.getByRole('button', { name: 'Liste löschen: Einkaufen' }));
     fixture.detectChanges();
     vi.runAllTimers();
 
     expect(component.activeListId()).toBe(1);
     expect((document.activeElement as HTMLElement | null)?.id).toBe('todo-list-button-1');
 
-    store.removeList(2);
-    fixture.detectChanges();
-    const newListInput = fixture.nativeElement.querySelector('#new-list') as HTMLInputElement;
-    const newListFocusSpy = vi.spyOn(newListInput, 'focus');
+    const newListElement = fixture.nativeElement.querySelector('#new-list') as HTMLElement;
+    const newListFocusSpy = vi.spyOn(newListElement, 'focus');
     component.removeList(1);
     fixture.detectChanges();
     vi.runAllTimers();
@@ -82,15 +65,10 @@ describe('TodoBoard', () => {
   });
 
   it('wechselt die Liste und fokussiert das Eingabefeld', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoBoard],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(TodoBoard);
+    const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
 
-    fixture.detectChanges();
-    component.switchList(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Büro' }));
     fixture.detectChanges();
     vi.runAllTimers();
 
@@ -99,31 +77,23 @@ describe('TodoBoard', () => {
   });
 
   it('verdrahtet Sidebar-Outputs im Template und ignoriert fehlende Fokusziele', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoBoard],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(TodoBoard);
+    const { fixture } = await render(TodoBoard);
     const component = fixture.componentInstance;
-    const sidebar = fixture.debugElement.query(By.directive(TodoSidebar))
-      .componentInstance as TodoSidebar;
 
-    fixture.detectChanges();
-
-    sidebar.listSelected.emit(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Büro' }));
     fixture.detectChanges();
     vi.runAllTimers();
     expect(component.activeListId()).toBe(2);
 
     component.form.controls.name.setValue('Per Output');
-    sidebar.listAdded.emit();
+    fireEvent.click(screen.getByRole('button', { name: 'Liste hinzufügen' }));
     fixture.detectChanges();
     vi.runAllTimers();
 
     expect(component.lists().at(-1)?.name).toBe('Per Output');
 
     const addedId = component.activeListId();
-    sidebar.listRemoved.emit(addedId);
+    fireEvent.click(screen.getByRole('button', { name: 'Liste löschen: Per Output' }));
     fixture.detectChanges();
     vi.runAllTimers();
 

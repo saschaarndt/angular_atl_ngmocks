@@ -1,28 +1,25 @@
-import { TestBed } from '@angular/core/testing';
+import { fireEvent, render, screen } from '@testing-library/angular';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { TodoTextInput } from './todo-text-input';
 
 describe('TodoTextInput', () => {
   it('bindet Werte und Attribute korrekt', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoTextInput],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(TodoTextInput);
+    const { fixture } = await render(TodoTextInput, {
+      inputs: {
+        label: 'Titel',
+        id: 'todo-input',
+        placeholder: 'Text',
+        autocomplete: 'name',
+      },
+    });
     const component = fixture.componentInstance;
-
-    fixture.componentRef.setInput('label', 'Titel');
-    fixture.componentRef.setInput('id', 'todo-input');
-    fixture.componentRef.setInput('placeholder', 'Text');
-    fixture.componentRef.setInput('autocomplete', 'name');
-    fixture.detectChanges();
 
     component.writeValue('Hallo');
     fixture.detectChanges();
 
-    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
-    const label = fixture.nativeElement.querySelector('label') as HTMLLabelElement;
+    const input = screen.getByLabelText('Titel') as HTMLInputElement;
+    const label = screen.getByText('Titel') as HTMLLabelElement;
     const valueAccessors = fixture.debugElement.injector.get(NG_VALUE_ACCESSOR);
 
     expect(input.id).toBe('todo-input');
@@ -38,43 +35,42 @@ describe('TodoTextInput', () => {
   });
 
   it('meldet Eingaben, Disabled-State und Fokuszustände', async () => {
-    await TestBed.configureTestingModule({
-      imports: [TodoTextInput],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(TodoTextInput);
+    const { fixture } = await render(TodoTextInput, {
+      inputs: {
+        label: 'Eingabe',
+      },
+    });
     const component = fixture.componentInstance;
     const onChange = vi.fn();
     const onTouched = vi.fn();
-    fixture.detectChanges();
 
-    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const input = screen.getByLabelText('Eingabe') as HTMLInputElement;
     const focusSpy = vi.spyOn(input, 'focus');
 
     input.value = 'Default';
-    input.dispatchEvent(new Event('input'));
-    input.dispatchEvent(new Event('blur'));
+    fireEvent.input(input);
+    fireEvent.blur(input);
     fixture.detectChanges();
 
     component.registerOnChange(onChange);
     component.registerOnTouched(onTouched);
 
     input.value = 'Neu';
-    input.dispatchEvent(new Event('input'));
+    fireEvent.input(input);
     fixture.detectChanges();
 
     expect(onChange).toHaveBeenCalledWith('Neu');
 
-    input.dispatchEvent(new Event('focus'));
+    fireEvent.focus(input);
     fixture.detectChanges();
     expect(component.isKeyboardFocused()).toBe(true);
 
-    input.dispatchEvent(new MouseEvent('mousedown'));
-    input.dispatchEvent(new Event('focus'));
+    fireEvent.mouseDown(input);
+    fireEvent.focus(input);
     fixture.detectChanges();
     expect(component.isKeyboardFocused()).toBe(false);
 
-    input.dispatchEvent(new Event('blur'));
+    fireEvent.blur(input);
     fixture.detectChanges();
     expect(onTouched).toHaveBeenCalled();
     expect(component.isKeyboardFocused()).toBe(false);

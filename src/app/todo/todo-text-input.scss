@@ -68,13 +68,13 @@
   font-weight: 600;
 }
 
-.todo-text-input--disabled .todo-text-input__control {
+.todo-text-input__control--disabled {
   color: #8aa0b7;
   border-color: #d6e4ef;
   background: #f4f8fb;
   cursor: not-allowed;
 }
 
-.todo-text-input--disabled .todo-text-input__label {
+.todo-text-input__label--disabled {
   color: #9eb0c0;
 }

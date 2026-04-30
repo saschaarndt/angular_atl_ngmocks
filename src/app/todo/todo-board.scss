@@ -174,12 +174,12 @@
   opacity: 1;
 }
 
-.board__tab--active .board__tab-close {
+.board__tab-close--active {
   color: rgba(255, 255, 255, 0.75);
   opacity: 1;
 }
 
-.board__tab--active .board__tab-close:hover {
+.board__tab-close--active:hover {
   background: rgba(255, 255, 255, 0.2);
   color: var(--color-white);
 }
@@ -192,7 +192,7 @@
   gap: 1rem;
 }
 
-.board__add-form app-todo-text-input {
+.board__list-input {
   width: 100%;
 }
 
@@ -241,14 +241,6 @@
   display: flex;
   gap: 2rem;
   flex-shrink: 0;
-}
-
-.board__footer span {
-  cursor: pointer;
-}
-
-.board__footer span:hover {
-  text-decoration: underline;
 }
 
 /* ============================================================

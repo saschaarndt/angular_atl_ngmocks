@@ -2,6 +2,7 @@
   <div class="todo-list__section">
     <form class="todo-list__form" [formGroup]="form" (ngSubmit)="addTodo()">
       <app-todo-text-input
+        class="todo-list__input"
         [id]="'new-todo-' + listId()"
         label="Neue Aufgabe"
         placeholder="Was muss erledigt werden?"
@@ -27,7 +28,9 @@
                 [formControl]="todoControl(todo)"
                 [label]="'Aufgabe als erledigt markieren: ' + todo.title"
               />
-              <span class="todo-list__title">{{ todo.title }}</span>
+              <span class="todo-list__title" [class.todo-list__title--completed]="todo.completed">
+                {{ todo.title }}
+              </span>
             </div>
             <button
               type="button"

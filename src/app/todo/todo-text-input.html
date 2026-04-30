@@ -4,6 +4,7 @@
     [id]="id()"
     type="text"
     class="todo-text-input__control"
+    [class.todo-text-input__control--disabled]="disabled"
     [class.todo-text-input__control--keyboard-focused]="isKeyboardFocused()"
     [value]="value"
     [placeholder]="placeholder()"
@@ -14,6 +15,12 @@
     (input)="onInput($event)"
     (blur)="onBlur()"
   />
-  <label class="todo-text-input__label" [for]="id()">{{ label() }}</label>
+  <label
+    class="todo-text-input__label"
+    [class.todo-text-input__label--disabled]="disabled"
+    [for]="id()"
+  >
+    {{ label() }}
+  </label>
   <span class="todo-text-input__underline"></span>
 </div>

@@ -40,8 +40,8 @@ export class TodoTextInput implements ControlValueAccessor {
   disabled = false;
 
   #mouseDownPending = false;
-  #onChange: (value: string) => void = () => {};
-  #onTouched: () => void = () => {};
+  #onChange: (value: string) => void = () => void 0;
+  #onTouched: () => void = () => void 0;
 
   writeValue(value: string): void {
     this.value = value ?? '';

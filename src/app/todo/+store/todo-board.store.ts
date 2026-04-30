@@ -2,10 +2,10 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 
 import { TodoListModel } from '../todo.model';
 
-type TodoBoardState = {
+interface TodoBoardState {
   _nextListId: number;
   lists: TodoListModel[];
-};
+}
 
 const initialState: TodoBoardState = {
   _nextListId: 4,

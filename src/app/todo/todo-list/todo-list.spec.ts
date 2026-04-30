@@ -1,5 +1,6 @@
 import '../../../test-setup';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { signal } from '@angular/core';
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { ngMocks } from 'ng-mocks';
 
@@ -8,6 +9,73 @@ import { TodoBoardStore } from '../+store/todo-board.store';
 import { TodoListStore } from '../+store/todo-list.store';
 import { TodoTextInput } from '../todo-text-input/todo-text-input';
 import { TodoList } from './todo-list';
+import { provideMockSignalStore, type SignalStoreMock } from '../../../testing/signal-store.mock';
+
+const defaultLists = [
+  { id: 1, name: 'Privat' },
+  { id: 2, name: 'Büro' },
+  { id: 3, name: 'Einkaufen' },
+];
+
+function createTodoBoardStoreProvider() {
+  const lists = signal([...defaultLists]);
+  let nextListId = 4;
+
+  return provideMockSignalStore(TodoBoardStore, {
+    state: { lists },
+    methods: ['addList', 'removeList'],
+    methodImpls: {
+      addList: (name) => {
+        const created = { id: nextListId, name: name.trim() };
+        nextListId += 1;
+        lists.update((current) => [...current, created]);
+        return created;
+      },
+      removeList: (id) => {
+        lists.update((current) => current.filter((list) => list.id !== id));
+      },
+    },
+  });
+}
+
+function createTodoListStoreProvider() {
+  const todos = signal<{ id: number; title: string; completed: boolean; listId: number }[]>([]);
+  let nextTodoId = 1;
+
+  return provideMockSignalStore(TodoListStore, {
+    state: { todos },
+    methods: ['add', 'toggle', 'remove', 'clearCompleted', 'removeListTodos'],
+    methodImpls: {
+      add: (listId, title) => {
+        const trimmed = title.trim();
+        if (!trimmed) {
+          return;
+        }
+
+        todos.update((current) => [
+          ...current,
+          { id: nextTodoId++, title: trimmed, completed: false, listId },
+        ]);
+      },
+      toggle: (id) => {
+        todos.update((current) =>
+          current.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)),
+        );
+      },
+      remove: (id) => {
+        todos.update((current) => current.filter((todo) => todo.id !== id));
+      },
+      clearCompleted: (listId) => {
+        todos.update((current) =>
+          current.filter((todo) => !(todo.listId === listId && todo.completed)),
+        );
+      },
+      removeListTodos: (listId) => {
+        todos.update((current) => current.filter((todo) => todo.listId !== listId));
+      },
+    },
+  });
+}
 
 describe('TodoList', () => {
   ngMocks.faster();
@@ -27,6 +95,8 @@ describe('TodoList', () => {
       inputs: {
         listId,
       },
+      providers: [createTodoBoardStoreProvider()],
+      componentProviders: [createTodoListStoreProvider()],
     });
 
     fixture.detectChanges();
@@ -36,8 +106,12 @@ describe('TodoList', () => {
     return {
       fixture,
       component: fixture.componentInstance,
-      boardStore: fixture.debugElement.injector.get(TodoBoardStore),
-      todoStore: fixture.debugElement.injector.get(TodoListStore),
+      boardStore: fixture.debugElement.injector.get(TodoBoardStore) as SignalStoreMock<
+        typeof TodoBoardStore
+      >,
+      todoStore: fixture.debugElement.injector.get(TodoListStore) as SignalStoreMock<
+        typeof TodoListStore
+      >,
       focusSpy,
     };
   }
@@ -103,11 +177,11 @@ describe('TodoList', () => {
     await expect(harness.getCurrentTodoTitles()).resolves.toEqual(['Aufgabe 1', 'Aufgabe 2']);
     await expect(harness.getOpenCountText()).resolves.toContain('1 Aufgabe offen');
 
-    const toggleSpy = vi.spyOn(todoStore, 'toggle');
+    todoStore.toggle.mockClear();
     component.onTodoCheckedChange(todoStore.todos()[0], true);
     component.onTodoCheckedChange(todoStore.todos()[1], true);
-    expect(toggleSpy).toHaveBeenCalledTimes(1);
-    expect(toggleSpy).toHaveBeenCalledWith(1);
+    expect(todoStore.toggle).toHaveBeenCalledTimes(1);
+    expect(todoStore.toggle).toHaveBeenCalledWith(1);
 
     await harness.removeTodo('Aufgabe 1');
     expect(todoStore.todos().map((todo) => todo.id)).toEqual([2]);

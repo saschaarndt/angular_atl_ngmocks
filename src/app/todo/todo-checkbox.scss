@@ -12,10 +12,10 @@
   color: var(--color-sky-blue);
   cursor: pointer;
   line-height: 1;
+}
 
-  &:focus-visible {
-    outline: 3px solid var(--color-dark-blue);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
+.todo-checkbox:focus-visible {
+  outline: 3px solid var(--color-dark-blue);
+  outline-offset: 3px;
+  border-radius: 2px;
 }

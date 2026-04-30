@@ -16,15 +16,15 @@ import { TodoTextInput } from './todo-text-input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoBoard {
-  private readonly document = inject(DOCUMENT);
-  private readonly todoListsStore = inject(TodoBoardStore);
+  readonly #document = inject(DOCUMENT);
+  readonly #todoListsStore = inject(TodoBoardStore);
 
   readonly plusIcon = faPlus;
   readonly deleteIcon = faTrashCan;
   readonly closeIcon = faXmark;
 
-  readonly lists = this.todoListsStore.lists;
-  readonly activeListId = signal<number>(this.todoListsStore.lists()[0]?.id ?? 0);
+  readonly lists = this.#todoListsStore.lists;
+  readonly activeListId = signal<number>(this.#todoListsStore.lists()[0]?.id ?? 0);
   readonly activeList = computed(() => this.lists().find((l) => l.id === this.activeListId()));
 
   readonly form = new FormGroup({
@@ -37,15 +37,15 @@ export class TodoBoard {
   addList(): void {
     const name = this.form.controls.name.value.trim();
     if (name) {
-      const list = this.todoListsStore.addList(name);
+      const list = this.#todoListsStore.addList(name);
       this.activeListId.set(list.id);
       this.form.reset();
-      this.focusTodoInput(list.id);
+      this.#focusTodoInput(list.id);
     }
   }
 
   removeList(id: number): void {
-    this.todoListsStore.removeList(id);
+    this.#todoListsStore.removeList(id);
     const remaining = this.lists();
     if (this.activeListId() === id && remaining.length > 0) {
       this.activeListId.set(remaining[0].id);
@@ -56,10 +56,10 @@ export class TodoBoard {
     this.activeListId.set(id);
   }
 
-  private focusTodoInput(listId: number): void {
+  #focusTodoInput(listId: number): void {
     // Wait for the list card render before focusing the new-todo input.
     setTimeout(() => {
-      const input = this.document.getElementById(`new-todo-${listId}`);
+      const input = this.#document.getElementById(`new-todo-${listId}`);
       if (input instanceof HTMLInputElement) {
         input.focus();
       }

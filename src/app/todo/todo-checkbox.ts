@@ -26,19 +26,19 @@ export class TodoCheckbox implements ControlValueAccessor {
   checked = false;
   disabled = false;
 
-  private onChange: (value: boolean) => void = () => {};
-  private onTouched: () => void = () => {};
+  #onChange: (value: boolean) => void = () => {};
+  #onTouched: () => void = () => {};
 
   writeValue(value: boolean): void {
     this.checked = value;
   }
 
   registerOnChange(fn: (value: boolean) => void): void {
-    this.onChange = fn;
+    this.#onChange = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.#onTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -50,11 +50,11 @@ export class TodoCheckbox implements ControlValueAccessor {
       return;
     }
     this.checked = !this.checked;
-    this.onChange(this.checked);
-    this.onTouched();
+    this.#onChange(this.checked);
+    this.#onTouched();
   }
 
   onBlur(): void {
-    this.onTouched();
+    this.#onTouched();
   }
 }

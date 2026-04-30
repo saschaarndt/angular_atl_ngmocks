@@ -30,11 +30,11 @@ import { TodoTextInput } from './todo-text-input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoList {
-  private readonly todoListsStore = inject(TodoBoardStore);
-  private readonly todoStore = inject(TodoListStore);
-  private readonly todoControls = new Map<number, FormControl<boolean>>();
-  private readonly todoControlSubscriptions = new Map<number, Subscription>();
-  private readonly cdr = inject(ChangeDetectorRef);
+  readonly #todoListsStore = inject(TodoBoardStore);
+  readonly #todoStore = inject(TodoListStore);
+  readonly #todoControls = new Map<number, FormControl<boolean>>();
+  readonly #todoControlSubscriptions = new Map<number, Subscription>();
+  readonly #cdr = inject(ChangeDetectorRef);
 
   readonly newTodoInput = viewChild(TodoTextInput);
 
@@ -45,10 +45,12 @@ export class TodoList {
   readonly listId = input.required<number>();
 
   readonly currentList = computed(() =>
-    this.todoListsStore.lists().find((l) => l.id === this.listId()),
+    this.#todoListsStore.lists().find((l) => l.id === this.listId()),
   );
 
-  readonly todos = computed(() => this.todoStore.todos().filter((t) => t.listId === this.listId()));
+  readonly todos = computed(() =>
+    this.#todoStore.todos().filter((t) => t.listId === this.listId()),
+  );
 
   readonly activeTodos = computed(() => this.todos().filter((t) => !t.completed));
   readonly completedTodos = computed(() => this.todos().filter((t) => t.completed));
@@ -88,16 +90,16 @@ export class TodoList {
       const todos = this.todos();
       const todoIds = new Set(todos.map((todo) => todo.id));
 
-      for (const existingId of Array.from(this.todoControls.keys())) {
+      for (const existingId of Array.from(this.#todoControls.keys())) {
         if (!todoIds.has(existingId)) {
-          this.todoControlSubscriptions.get(existingId)?.unsubscribe();
-          this.todoControlSubscriptions.delete(existingId);
-          this.todoControls.delete(existingId);
+          this.#todoControlSubscriptions.get(existingId)?.unsubscribe();
+          this.#todoControlSubscriptions.delete(existingId);
+          this.#todoControls.delete(existingId);
         }
       }
 
       for (const todo of todos) {
-        const control = this.getOrCreateTodoControl(todo);
+        const control = this.#getOrCreateTodoControl(todo);
         if (control.value !== todo.completed) {
           control.setValue(todo.completed, { emitEvent: false });
         }
@@ -105,10 +107,10 @@ export class TodoList {
     });
 
     effect(() => {
-      const listIds = new Set(this.todoListsStore.lists().map((list) => list.id));
+      const listIds = new Set(this.#todoListsStore.lists().map((list) => list.id));
       const orphanListIds = Array.from(
         new Set(
-          this.todoStore
+          this.#todoStore
             .todos()
             .filter((todo) => !listIds.has(todo.listId))
             .map((todo) => todo.listId),
@@ -116,7 +118,7 @@ export class TodoList {
       );
 
       for (const listId of orphanListIds) {
-        this.todoStore.removeListTodos(listId);
+        this.#todoStore.removeListTodos(listId);
       }
     });
   }
@@ -124,18 +126,18 @@ export class TodoList {
   addTodo(): void {
     const title = this.form.controls.title.value.trim();
     if (title) {
-      this.todoStore.add(this.listId(), title);
+      this.#todoStore.add(this.listId(), title);
       this.form.reset({ title: '' });
-      this.cdr.markForCheck();
+      this.#cdr.markForCheck();
     }
   }
 
   remove(id: number): void {
-    this.todoStore.remove(id);
+    this.#todoStore.remove(id);
   }
 
   clearCompleted(): void {
-    this.todoStore.clearCompleted(this.listId());
+    this.#todoStore.clearCompleted(this.listId());
   }
 
   setFilter(filter: FilterType): void {
@@ -143,25 +145,25 @@ export class TodoList {
   }
 
   todoControl(todo: Todo): FormControl<boolean> {
-    return this.getOrCreateTodoControl(todo);
+    return this.#getOrCreateTodoControl(todo);
   }
 
-  private getOrCreateTodoControl(todo: Todo): FormControl<boolean> {
-    const existing = this.todoControls.get(todo.id);
+  #getOrCreateTodoControl(todo: Todo): FormControl<boolean> {
+    const existing = this.#todoControls.get(todo.id);
     if (existing) {
       return existing;
     }
 
     const control = new FormControl(todo.completed, { nonNullable: true });
     const subscription = control.valueChanges.subscribe((checked) => {
-      const currentTodo = this.todoStore.todos().find((entry) => entry.id === todo.id);
+      const currentTodo = this.#todoStore.todos().find((entry) => entry.id === todo.id);
       if (currentTodo && currentTodo.completed !== checked) {
-        this.todoStore.toggle(todo.id);
+        this.#todoStore.toggle(todo.id);
       }
     });
 
-    this.todoControls.set(todo.id, control);
-    this.todoControlSubscriptions.set(todo.id, subscription);
+    this.#todoControls.set(todo.id, control);
+    this.#todoControlSubscriptions.set(todo.id, subscription);
     return control;
   }
 }

@@ -25,7 +25,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoTextInput implements ControlValueAccessor {
-  private readonly cdr = inject(ChangeDetectorRef);
+  readonly #cdr = inject(ChangeDetectorRef);
 
   readonly textInput = viewChild.required<ElementRef<HTMLInputElement>>('textInput');
 
@@ -38,21 +38,21 @@ export class TodoTextInput implements ControlValueAccessor {
   disabled = false;
   readonly isKeyboardFocused = signal(false);
 
-  private _mouseDownPending = false;
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  #mouseDownPending = false;
+  #onChange: (value: string) => void = () => {};
+  #onTouched: () => void = () => {};
 
   writeValue(value: string): void {
     this.value = value ?? '';
-    this.cdr.markForCheck();
+    this.#cdr.markForCheck();
   }
 
   registerOnChange(fn: (value: string) => void): void {
-    this.onChange = fn;
+    this.#onChange = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.#onTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -62,26 +62,26 @@ export class TodoTextInput implements ControlValueAccessor {
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.value = target.value;
-    this.onChange(this.value);
+    this.#onChange(this.value);
   }
 
   onMouseDown(): void {
-    this._mouseDownPending = true;
+    this.#mouseDownPending = true;
   }
 
   onFocus(): void {
-    if (this._mouseDownPending) {
+    if (this.#mouseDownPending) {
       this.isKeyboardFocused.set(false);
     } else {
       this.isKeyboardFocused.set(true);
     }
-    this._mouseDownPending = false;
+    this.#mouseDownPending = false;
   }
 
   onBlur(): void {
     this.isKeyboardFocused.set(false);
-    this._mouseDownPending = false;
-    this.onTouched();
+    this.#mouseDownPending = false;
+    this.#onTouched();
   }
 
   focus(): void {

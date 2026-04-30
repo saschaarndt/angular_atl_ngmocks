@@ -28,8 +28,7 @@ export class TodoSidebar {
     this.listSelected.emit(id);
   }
 
-  removeList(id: number, event: Event): void {
-    event.stopPropagation();
+  removeList(id: number): void {
     this.listRemoved.emit(id);
   }
 

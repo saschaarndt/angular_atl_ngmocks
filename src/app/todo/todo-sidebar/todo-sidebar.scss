@@ -25,11 +25,25 @@
   gap: 0.25rem;
 }
 
+.todo-sidebar__tab-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 6px;
+  padding-right: 0.375rem;
+}
+
+.todo-sidebar__tab-row--active {
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
 .todo-sidebar__tab {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  justify-content: flex-start;
+  gap: 0;
+  flex: 1;
   padding: 0.625rem 0.875rem;
   border: none;
   border-radius: 6px;
@@ -53,9 +67,14 @@
 }
 
 .todo-sidebar__tab--active {
-  background: var(--color-dark-blue);
+  background: transparent;
   color: var(--color-white);
   font-weight: 700;
+}
+
+.todo-sidebar__tab-row--active .todo-sidebar__tab:hover {
+  background: transparent;
+  color: var(--color-white);
 }
 
 .todo-sidebar__tab-name {
@@ -70,16 +89,26 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  line-height: 1;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  color: var(--color-muted);
+  color: var(--color-dark-blue);
   cursor: pointer;
   font-size: 0.75rem;
   opacity: 0.5;
+  border: 1px solid transparent;
   transition:
     opacity 0.15s,
     background 0.15s;
+}
+
+.todo-sidebar__tab-close fa-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .todo-sidebar__tab-close:hover {
@@ -95,13 +124,13 @@
 }
 
 .todo-sidebar__tab-close--active {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-dark-blue);
   opacity: 1;
 }
 
 .todo-sidebar__tab-close--active:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
+  background: #fff;
+  color: var(--color-dark-blue);
 }
 
 .todo-sidebar__add-form {
@@ -156,8 +185,11 @@
     flex-wrap: wrap;
   }
 
-  .todo-sidebar__tab {
+  .todo-sidebar__tab-row {
     flex: 1 1 auto;
+  }
+
+  .todo-sidebar__tab {
     justify-content: center;
   }
 }

@@ -2,30 +2,32 @@
   <section class="todo-sidebar__card" aria-label="Listenwahl">
     <nav class="todo-sidebar__tabs" role="tablist" aria-label="Meine Listen">
       @for (list of lists(); track list.id) {
-        <button
-          type="button"
-          role="tab"
-          class="todo-sidebar__tab"
-          [class.todo-sidebar__tab--active]="activeListId() === list.id"
-          [attr.aria-selected]="activeListId() === list.id"
-          (click)="selectList(list.id)"
+        <div
+          class="todo-sidebar__tab-row"
+          [class.todo-sidebar__tab-row--active]="activeListId() === list.id"
         >
-          <span class="todo-sidebar__tab-name">{{ list.name }}</span>
+          <button
+            type="button"
+            role="tab"
+            class="todo-sidebar__tab"
+            [class.todo-sidebar__tab--active]="activeListId() === list.id"
+            [attr.aria-selected]="activeListId() === list.id"
+            (click)="selectList(list.id)"
+          >
+            <span class="todo-sidebar__tab-name">{{ list.name }}</span>
+          </button>
           @if (lists().length > 1) {
-            <span
+            <button
+              type="button"
               class="todo-sidebar__tab-close"
               [class.todo-sidebar__tab-close--active]="activeListId() === list.id"
-              role="button"
-              tabindex="0"
               [attr.aria-label]="'Liste löschen: ' + list.name"
-              (click)="removeList(list.id, $event)"
-              (keydown.enter)="removeList(list.id, $event)"
-              (keydown.space)="removeList(list.id, $event)"
+              (click)="removeList(list.id)"
             >
               <fa-icon [icon]="closeIcon()" />
-            </span>
+            </button>
           }
-        </button>
+        </div>
       }
     </nav>
   </section>

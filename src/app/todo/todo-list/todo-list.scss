@@ -10,8 +10,6 @@
   margin: 0 0 1rem;
 }
 
-/* Form */
-
 .todo-list__form {
   display: flex;
   gap: 1rem;
@@ -53,8 +51,6 @@
   outline: 3px solid var(--color-dark-blue);
   outline-offset: 3px;
 }
-
-/* List */
 
 .todo-list__items {
   list-style: none;
@@ -140,8 +136,6 @@
   color: var(--color-muted);
   font-style: italic;
 }
-
-/* Footer */
 
 .todo-list__footer {
   display: flex;

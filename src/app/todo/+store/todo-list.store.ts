@@ -3,27 +3,29 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { Todo } from '../todo.model';
 
 type TodoListState = {
+  _nextTodoId: number;
   todos: Todo[];
-  nextTodoId: number;
 };
 
 const initialState: TodoListState = {
+  _nextTodoId: 1,
   todos: [],
-  nextTodoId: 1,
 };
 
 export const TodoListStore = signalStore(
   withState(initialState),
+
   withMethods((store) => ({
     add(listId: number, title: string): void {
       const trimmed = title.trim();
-      if (!trimmed) {
-        return;
-      }
+      if (!trimmed) return;
 
       patchState(store, (state) => ({
-        todos: [...state.todos, { id: state.nextTodoId, title: trimmed, completed: false, listId }],
-        nextTodoId: state.nextTodoId + 1,
+        todos: [
+          ...state.todos,
+          { id: state._nextTodoId, title: trimmed, completed: false, listId },
+        ],
+        _nextTodoId: state._nextTodoId + 1,
       }));
     },
 

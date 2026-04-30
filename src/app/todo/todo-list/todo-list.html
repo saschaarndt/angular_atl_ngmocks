@@ -25,7 +25,8 @@
             <div class="todo-list__label">
               <app-todo-checkbox
                 class="todo-list__checkbox"
-                [formControl]="todoControl(todo)"
+                [checked]="todo.completed"
+                (changed)="onTodoCheckedChange(todo, $event)"
                 [label]="'Aufgabe als erledigt markieren: ' + todo.title"
               />
               <span class="todo-list__title" [class.todo-list__title--completed]="todo.completed">

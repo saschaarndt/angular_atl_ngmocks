@@ -13,7 +13,6 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBroom, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
 
 import { TodoBoardStore } from '../+store/todo-board.store';
 import { TodoCheckbox } from '../todo-checkbox/todo-checkbox';
@@ -32,8 +31,6 @@ import { TodoTextInput } from '../todo-text-input/todo-text-input';
 export class TodoList {
   readonly #todoListsStore = inject(TodoBoardStore);
   readonly #todoStore = inject(TodoListStore);
-  readonly #todoControls = new Map<number, FormControl<boolean>>();
-  readonly #todoControlSubscriptions = new Map<number, Subscription>();
   readonly #cdr = inject(ChangeDetectorRef);
 
   readonly newTodoInput = viewChild(TodoTextInput);
@@ -87,26 +84,6 @@ export class TodoList {
     });
 
     effect(() => {
-      const todos = this.todos();
-      const todoIds = new Set(todos.map((todo) => todo.id));
-
-      for (const existingId of Array.from(this.#todoControls.keys())) {
-        if (!todoIds.has(existingId)) {
-          this.#todoControlSubscriptions.get(existingId)?.unsubscribe();
-          this.#todoControlSubscriptions.delete(existingId);
-          this.#todoControls.delete(existingId);
-        }
-      }
-
-      for (const todo of todos) {
-        const control = this.#getOrCreateTodoControl(todo);
-        if (control.value !== todo.completed) {
-          control.setValue(todo.completed, { emitEvent: false });
-        }
-      }
-    });
-
-    effect(() => {
       const listIds = new Set(this.#todoListsStore.lists().map((list) => list.id));
       const orphanListIds = Array.from(
         new Set(
@@ -125,11 +102,11 @@ export class TodoList {
 
   addTodo(): void {
     const title = this.form.controls.title.value.trim();
-    if (title) {
-      this.#todoStore.add(this.listId(), title);
-      this.form.reset({ title: '' });
-      this.#cdr.markForCheck();
-    }
+    if (!title) return;
+
+    this.#todoStore.add(this.listId(), title);
+    this.form.reset({ title: '' });
+    this.#cdr.markForCheck();
   }
 
   remove(id: number): void {
@@ -144,26 +121,9 @@ export class TodoList {
     this.filter.set(filter);
   }
 
-  todoControl(todo: Todo): FormControl<boolean> {
-    return this.#getOrCreateTodoControl(todo);
-  }
-
-  #getOrCreateTodoControl(todo: Todo): FormControl<boolean> {
-    const existing = this.#todoControls.get(todo.id);
-    if (existing) {
-      return existing;
+  onTodoCheckedChange(todo: Todo, checked: boolean): void {
+    if (todo.completed !== checked) {
+      this.#todoStore.toggle(todo.id);
     }
-
-    const control = new FormControl(todo.completed, { nonNullable: true });
-    const subscription = control.valueChanges.subscribe((checked) => {
-      const currentTodo = this.#todoStore.todos().find((entry) => entry.id === todo.id);
-      if (currentTodo && currentTodo.completed !== checked) {
-        this.#todoStore.toggle(todo.id);
-      }
-    });
-
-    this.#todoControls.set(todo.id, control);
-    this.#todoControlSubscriptions.set(todo.id, subscription);
-    return control;
   }
 }

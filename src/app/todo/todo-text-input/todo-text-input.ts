@@ -33,10 +33,10 @@ export class TodoTextInput implements ControlValueAccessor {
   readonly id = input('todo-text-input');
   readonly placeholder = input(' ');
   readonly autocomplete = input('off');
+  readonly isKeyboardFocused = signal(false);
 
   value = '';
   disabled = false;
-  readonly isKeyboardFocused = signal(false);
 
   #mouseDownPending = false;
   #onChange: (value: string) => void = () => {};
@@ -70,11 +70,7 @@ export class TodoTextInput implements ControlValueAccessor {
   }
 
   onFocus(): void {
-    if (this.#mouseDownPending) {
-      this.isKeyboardFocused.set(false);
-    } else {
-      this.isKeyboardFocused.set(true);
-    }
+    this.isKeyboardFocused.set(!this.#mouseDownPending);
     this.#mouseDownPending = false;
   }
 

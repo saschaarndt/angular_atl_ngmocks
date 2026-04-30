@@ -34,7 +34,7 @@
   outline: 1px solid var(--color-sky-blue);
 }
 
-.todo-text-input__control--keyboard-focused {
+.todo-text-input__control:focus.todo-text-input__control--keyboard-focused {
   outline: 3px solid var(--color-dark-blue);
   outline-offset: 3px;
 }

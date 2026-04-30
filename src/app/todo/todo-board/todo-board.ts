@@ -36,12 +36,12 @@ export class TodoBoard {
 
   addList(): void {
     const name = this.form.controls.name.value.trim();
-    if (name) {
-      const list = this.#todoListsStore.addList(name);
-      this.activeListId.set(list.id);
-      this.form.reset();
-      this.#focusTodoInput(list.id);
-    }
+    if (!name) return;
+
+    const list = this.#todoListsStore.addList(name);
+    this.activeListId.set(list.id);
+    this.form.reset();
+    this.#focusTodoInput(list.id);
   }
 
   removeList(id: number): void {
@@ -58,7 +58,6 @@ export class TodoBoard {
   }
 
   #focusTodoInput(listId: number): void {
-    // Wait for the list card render before focusing the new-todo input.
     setTimeout(() => {
       const input = this.#document.getElementById(`new-todo-${listId}`);
       if (input instanceof HTMLInputElement) {

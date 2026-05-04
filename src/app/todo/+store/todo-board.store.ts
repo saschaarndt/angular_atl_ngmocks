@@ -23,14 +23,12 @@ export const TodoBoardStore = signalStore(
 
   withMethods((store) => ({
     addList(name: string): TodoListModel {
-      const list: TodoListModel = {
-        id: store._nextListId(),
-        name: name.trim(),
-      };
+      const id = store._nextListId();
+      const list: TodoListModel = { id, name: name.trim() };
 
       patchState(store, {
         lists: [...store.lists(), list],
-        _nextListId: store._nextListId() + 1,
+        _nextListId: id + 1,
       });
 
       return list;
